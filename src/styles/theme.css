@@ -1,0 +1,114 @@
+/* Centralized theme tokens and Liquid Glass styles
+   Place this file where your app loads global styles (import into index.css or root component)
+*/
+:root{
+  /* Core tokens (shared across themes) */
+  --bg: #0f1720;               /* default background */
+  --surface: #111418;          /* default surface */
+  --text-primary: #e6eef9;
+  --text-muted: rgba(230,238,249,0.72);
+  --accent: #6b7bff;           /* primary accent (keeps same across themes) */
+  --accent-2: #6dd3ff;         /* secondary accent gradient */
+  --radius: 10px;
+  --card-padding: 12px;
+  --glass-blur: 10px;
+  --glass-opacity: 0.06;       /* how opaque the glass is (background) */
+  --glass-border: rgba(255,255,255,0.08);
+  --glass-shadow: rgba(0,0,0,0.22);
+  --transition-fast: 150ms;
+}
+
+/* App base layout */
+body, #root {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  margin: 0;
+  height: 100%;
+}
+
+/* Generic surface used across app in normal mode. Use .glass-surface for liquid glass surfaces. */
+.surface {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
+  border-radius: var(--radius);
+  padding: var(--card-padding);
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+/* Accent helpers */
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.link-accent { color: var(--accent); }
+
+/* Consistent program card (use across all program lists) */
+.program-card {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding:10px;
+  border-radius:8px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.program-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.2); }
+.program-card .icon { width:48px; height:48px; border-radius:8px; overflow:hidden; display:grid; place-items:center; }
+.program-card .meta { flex:1 1 auto; }
+.program-card .name { font-weight:600; margin-bottom:4px; }
+.program-card .desc { font-size:13px; color:var(--text-muted); }
+.program-card .actions { display:flex; gap:8px; }
+
+/* Program list layout */
+.program-list { display:grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap:10px; }
+.program-header { display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+.search-input { flex:1 1 auto; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background: rgba(0,0,0,0.04); color:var(--text-primary); }
+
+/* Utility to mark a surface that should receive the liquid glass treatment */
+.glass-surface { }
+
+/* Liquid glass theme — enable by adding .liquid-glass to <body> or top-level container */
+body.liquid-glass {
+  /* Slightly lighter base so blur shows */
+  --bg: linear-gradient(180deg, rgba(10,14,18,0.88), rgba(6,10,14,0.86));
+  --surface: rgba(255,255,255,0.02);
+  --text-primary: #e9f0fb;
+  --text-muted: rgba(233,240,251,0.72);
+}
+
+/* Only these target elements get the glass effect: main app background and menus */
+body.liquid-glass .app-background,
+body.liquid-glass .main-container { background: var(--bg); }
+
+/* Glass surfaces: menus, nav bars, side panels, dropdowns — keep buttons & text unchanged */
+body.liquid-glass .glass-surface,
+body.liquid-glass .menu,
+body.liquid-glass .toolbar,
+body.liquid-glass .side-menu,
+body.liquid-glass .dropdown,
+body.liquid-glass .context-menu {
+  background: rgba(255,255,255,var(--glass-opacity));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 24px var(--glass-shadow);
+  color: var(--text-primary);
+}
+
+/* Keep buttons, badges, and accents unchanged (so accent color still works) */
+body.liquid-glass .btn-primary {
+  box-shadow: 0 6px 18px rgba(107,123,255,0.12);
+}
+
+/* Small responsive tweaks */
+@media (max-width: 640px) {
+  .program-list { grid-template-columns: 1fr; }
+}
